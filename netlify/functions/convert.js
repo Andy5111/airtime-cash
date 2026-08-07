@@ -1,5 +1,4 @@
 exports.handler = async function(event, context) {
-  // Only allow POST requests
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
@@ -11,7 +10,6 @@ exports.handler = async function(event, context) {
     const data = JSON.parse(event.body);
     const { network, amount, phone } = data;
 
-    // Basic validation
     if (!network || !amount || !phone) {
       return {
         statusCode: 400,
@@ -19,26 +17,45 @@ exports.handler = async function(event, context) {
       };
     }
 
-    // For now we return a test response
-    // Later we will connect the real AirtimeToCash API here
+    const token = process.env.AIRTIME_API_TOKEN;
+
+    // First we check if conversion is available for this network and amount
+    const response = await fetch("https://automation.airtimetocash.com/api/v1/check/quota/availability", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        networkName: network,
+        amount: Number(amount)
+      })
+    });
+
+    const result = await response.json();
+
     return {
       statusCode: 200,
       body: JSON.stringify({
         success: true,
-        message: "Function received your request successfully",
+        message: "Quota check completed",
+        apiResponse: result,
         received: {
           network: network,
           amount: amount,
           phone: phone
-        },
-        note: "Real API connection will be added in the next step"
+        }
       })
     };
 
   } catch (error) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Something went wrong" })
+      body: JSON.stringify({ 
+        error: "Something went wrong",
+        details: error.message 
+      })
     };
   }
 };
