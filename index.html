@@ -163,7 +163,8 @@
                     alert("Success!\n\nNetwork: " + result.received.network + 
                           "\nAmount: " + result.received.amount + 
                           "\nPhone: " + result.received.phone + 
-                          "\n\n" + result.note);
+                          "\n\nMessage: " + result.message + 
+                          "\n\nAPI Response: " + JSON.stringify(result.apiResponse));
                 } else {
                     alert("Error: " + (result.error || "Something went wrong"));
                 }
