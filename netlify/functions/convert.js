@@ -18,7 +18,8 @@ exports.handler = async function(event, context) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json"
+          "Accept": "application/json",
+          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({
           networkName: network,
@@ -44,7 +45,8 @@ exports.handler = async function(event, context) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json"
+          "Accept": "application/json",
+          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({
           networkName: network,
@@ -65,7 +67,7 @@ exports.handler = async function(event, context) {
       };
     }
 
-    // ========== DEFAULT: Quota Check (old function) ==========
+    // ========== DEFAULT: Quota Check ==========
     const response = await fetch("https://automation.airtimetocash.com/api/v1/check/quota/availability", {
       method: "POST",
       headers: {
@@ -98,6 +100,3 @@ exports.handler = async function(event, context) {
         error: "Something went wrong",
         details: error.message 
       })
-    };
-  }
-};
