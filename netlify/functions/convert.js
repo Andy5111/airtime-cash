@@ -8,18 +8,17 @@ exports.handler = async function(event, context) {
 
   try {
     const data = JSON.parse(event.body);
-    const { action, network, amount, phone, otp, pin, sessionId, reference } = data;
-
+    const { action, network, amount, phone, otp } = data;
     const token = process.env.AIRTIME_API_TOKEN;
 
-    // ========== ACTION 1: GENERATE OTP ==========
+    // Generate OTP
     if (action === "generate_otp") {
       const response = await fetch("https://automation.airtimetocash.com/api/v1/generate/otp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
-          "Authorization": `Bearer ${token}`
+          "Authorization": "Bearer " + token
         },
         body: JSON.stringify({
           networkName: network,
@@ -39,14 +38,14 @@ exports.handler = async function(event, context) {
       };
     }
 
-    // ========== ACTION 2: VERIFY OTP ==========
+    // Verify OTP
     if (action === "verify_otp") {
       const response = await fetch("https://automation.airtimetocash.com/api/v1/verify/otp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
-          "Authorization": `Bearer ${token}`
+          "Authorization": "Bearer " + token
         },
         body: JSON.stringify({
           networkName: network,
@@ -67,13 +66,13 @@ exports.handler = async function(event, context) {
       };
     }
 
-    // ========== DEFAULT: Quota Check ==========
+    // Default - Check Quota
     const response = await fetch("https://automation.airtimetocash.com/api/v1/check/quota/availability", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "Authorization": `Bearer ${token}`
+        "Authorization": "Bearer " + token
       },
       body: JSON.stringify({
         networkName: network,
@@ -88,15 +87,17 @@ exports.handler = async function(event, context) {
       body: JSON.stringify({
         success: true,
         action: "check_quota",
-        apiResponse: result,
-        received: { network, amount, phone }
+        apiResponse: result
       })
     };
 
   } catch (error) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         error: "Something went wrong",
-        details: error.message 
+        details: error.message
       })
+    };
+  }
+};
