@@ -28,8 +28,8 @@
         nav a {
             color: white;
             text-decoration: none;
-            margin: 0 12px;
-            font-size: 15px;
+            margin: 0 10px;
+            font-size: 14px;
         }
         .container {
             padding: 20px;
@@ -94,6 +94,7 @@
         <a href="index.html">Home</a>
         <a href="how-it-works.html">How it Works</a>
         <a href="contact.html">Contact</a>
+        <a href="terms.html">Terms</a>
     </nav>
 
     <div class="container">
@@ -102,89 +103,4 @@
             MTN / Airtel / Glo / 9mobile - Up to 75-80%
         </div>
 
-        <div class="box">
-            <label for="network">Select Network</label>
-            <select id="network">
-                <option value="">-- Choose Network --</option>
-                <option value="MTN">MTN</option>
-                <option value="AIRTEL">Airtel</option>
-                <option value="GLO">Glo</option>
-                <option value="9MOBILE">9mobile</option>
-            </select>
-
-            <label for="amount">Amount (Naira)</label>
-            <input type="number" id="amount" placeholder="Minimum 500" min="500">
-
-            <label for="phone">Phone Number with the Airtime</label>
-            <input type="tel" id="phone" placeholder="e.g. 08012345678">
-
-            <button onclick="startConversion()">Convert Airtime Now</button>
-        </div>
-    </div>
-
-    <footer>
-        &copy; 2026 My Airtime to Cash. All rights reserved.
-    </footer>
-
-    <script>
-        async function startConversion() {
-            let network = document.getElementById("network").value;
-            let amount = document.getElementById("amount").value;
-            let phone = document.getElementById("phone").value;
-
-            if (!network || !amount || !phone) {
-                alert("Please fill all the fields.");
-                return;
-            }
-
-            if (amount < 500) {
-                alert("Minimum amount is 500 Naira");
-                return;
-            }
-
-            // Disable button while processing
-            const btn = document.querySelector("button");
-            btn.disabled = true;
-            btn.innerText = "Processing...";
-
-            try {
-                const response = await fetch("/.netlify/functions/convert", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        network: network,
-                        amount: amount,
-                        phone: phone
-                    })
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    const api = result.apiResponse;
-
-                    if (api.code === 5030) {
-                        alert("Service Temporarily Unavailable\n\nThere is no available recipient at the moment.\nPlease try again later.");
-                    } else if (api.code === 2000) {
-                        alert("Success!\n\n" + (api.message || "Request processed successfully."));
-                    } else {
-                        alert("Response from provider:\n\n" + (api.message || "Please try again later."));
-                    }
-                } else {
-                    alert("Error: " + (result.error || "Something went wrong. Please try again."));
-                }
-
-            } catch (error) {
-                alert("Failed to connect to the server. Please check your internet and try again.");
-            }
-
-            // Re-enable button
-            btn.disabled = false;
-            btn.innerText = "Convert Airtime Now";
-        }
-    </script>
-
-</body>
-</html>
+        <div class="box
